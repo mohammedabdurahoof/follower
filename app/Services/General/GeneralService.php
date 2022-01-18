@@ -20,6 +20,12 @@ class GeneralService {
     public function getServices() {
         return \App\Models\Service::where('status', 1)->get();
     }
+    public function getServicesForClient() {
+        return \App\Models\Service::where('status', 1)->where('table_exists', 'yes')->get();
+    }
+    public function getServicesForAdminData() {
+        return \App\Models\Service::where('status', 1)->where('table_exists', NULL)->get();
+    }
     
     public function getClietOrganizations($client) {
         return \App\Models\Organization::whereHas("client", function ($q) use ($client){

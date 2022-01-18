@@ -76,7 +76,7 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
 
                         @if(isset($data['user_display']))
                         @foreach($data['user_display'] as $key => $value)
-                        <div class="card card-primary">
+                        <div class="card card-primary user_display">
                             <div class="card-header">
                                 <h3 class="card-title">{{ $value['name'] }} Images</h3>
                             </div>
@@ -93,7 +93,7 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="browse-images">Browse Images(Multiple Can Be Selected)</label>
-                                            <input type="file" multiple class="form-control" id="browse-{{ $key }}" placeholder="Browse Images" name="admin_master[{{ $key }}][{{ $value['slug'] }}][]" >
+                                            <input type="file" multiple class="form-control" id="browse-{{ $key }}" placeholder="Browse Images" name="admin_master[{{ $key }}][{{ $value['slug'] }}][]" onchange="removeFields()">
                                         </div>
                                     </div>
                                 </div>
@@ -102,9 +102,9 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
                         @endforeach
                         @endif
 
-                        <div class="card card-primary">
+                        <div id="service-fields" class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Fields</h3>
+                                <h3 class="card-title">{{__('Fields')}}{{ (isset($data['service_detail']->table_exists) ? __("(Table Exists)") : __(''))   }}</h3>
                             </div>
 
                             <div class="card-body">
@@ -112,7 +112,7 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
                                     <div class="col-md-8 offset-md-2">
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input" name="service[table_exists]" type="checkbox" id="customCheckbox" value="yes">
+                                                <input class="custom-control-input" name="service[table_exists]" type="checkbox" id="customCheckbox" value="yes" onchange="removeUserDisplays()">
                                                 <label for="customCheckbox" class="custom-control-label">{{ __('Select This If Client Will Upload Data Using This Service Group') }} <br/> {{ __('For Deleting Updating Or Adding DataBase/Column') }} <br/> {{ __('(Don\'t tick if client will not upload data for this service group unnecessarily)')}}</label>
                                             </div>
                                         </div>
@@ -216,6 +216,10 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
                                         <button style="margin: 5px;" id="add-more-fields" class="btn btn-primary btn-md" type="button" onclick="addmorefield()">Add Field</button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card card-primary">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6 offset-md-3 text-center">
                                         @if($id == '')
@@ -252,6 +256,14 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.0/dist/jquery.validate.js"></script>
 <script src="{{ config('app.asset_url') }}/vendor/adminlte/plugins/select2/js/select2.min.js"></script>
 <script type="text/javascript">
+    function removeFields(){
+        return document.getElementById("service-fields").remove();
+    }
+    
+    function removeUserDisplays() {
+        return document.querySelectorAll(".user_display").forEach((element) => element.remove());
+    }
+    
     function addmorefield(elm){
         let countfields = checkFields();
         if (parseInt(countfields) < 30){
@@ -314,15 +326,6 @@ $title = ($id != "") ? "Edit Service" : "Add Service";
             },
             "service[status]":{
                 required:true
-            },
-            "service[fields][name]": {
-                required: true
-            },
-            "service[fields][mobile]": {
-                required: true
-            },
-            "service[fields][dob]": {
-                required: true
             }
         }
     });

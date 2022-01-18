@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\Admin\OrganizationService;
 use App\Services\Admin\FollowerserviceService;
 use App\Services\Admin\AdminMasterService;
 use App\Services\Admin\CreatetableForCustomerServiceService;
@@ -65,8 +64,9 @@ class ServiceController extends Controller {
         \DB::beginTransaction();
         try {
             $service = $this->service->upsertData($request->input('service'));
-            
-            $columnDataType = $this->service->saveDataTypes($request->input('service')['fields'], $service->id);
+            if ($request->has('service.fields')) {
+                $columnDataType = $this->service->saveDataTypes($request->input('service')['fields'], $service->id);
+            }
             
             if ($request->has('admin_master')) {
                 $message = $this->getAdminMasterInsertData($request->input('admin_master'), $service, $request, $ams);

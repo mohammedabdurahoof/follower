@@ -24,7 +24,7 @@ class ServiceRequest extends FormRequest {
         return [
             'service.name' => 'string|max:100|required|unique:services,name,' . $this->service['id'] . ',id,organization_id,' . $this->service['organization_id'],
             'service.status' => 'required', 'service.organization_id' => 'required',
-            'service.fields' => 'required', 
+            'service.fields' => 'array', 
             'admin_master.*.file_name' => 'max:100',
             'admin_master.*.page_top.*' => 'mimes:jpg,jpeg,png,JPG,JPEG,PNG|max:2048',
             'admin_master.*.full_page.*' => 'mimes:jpg,jpeg,png,JPG,JPEG,PNG|max:2048|dimensions:min_width=510,min_height=180,max_width=955',

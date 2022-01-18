@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Services\API\AuthService;
 use App\Services\API\OrgclientListService;
+use App\Services\API\ListService;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -19,8 +20,11 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->singleton(AuthService::class, function() {
             return new AuthService();
         });
-        $this->app->singleton(OrgclientListService::class, function($app) {
+        $this->app->singleton(OrgclientListService::class, function() {
             return new OrgclientListService();
+        });
+        $this->app->singleton(ListService::class, function() {
+            return new ListService();
         });
     }
 }

@@ -36,7 +36,9 @@ class FullimageService {
             $return['totalFiltered'] = $qry->count();
         }
 
-        $return['data'] = $qry->where('organization_id', auth()->user()->organization_id)->where("file_type", "images")->where("user_display_type", 2)
+        $return['data'] = $qry->where('organization_id', auth()->user()->organization_id)
+                        ->where("file_type", "images")
+                        ->where("user_display_type", 2)
                         ->offset($start)->limit($limit)->orderBy('id', 'DESC')->get();
         return $return;
     }
@@ -45,18 +47,18 @@ class FullimageService {
         return AdminMaster::with(['service', 'organization', 'admin_master_image'])
                         ->find($id);
     }
-    
+
     public function getTopImageById(int $id) {
         $image = AdminMasterImage::findOrFail($id);
-        if(isset($image->image_link) && \Storage::exists($image->image_link)){
+        if (isset($image->image_link) && \Storage::exists($image->image_link)) {
             return $image->image_link;
         }
         return NULL;
     }
-    
+
     public function getBottomImageById(int $id) {
         $image = Client::findOrFail($id);
-        if(isset($image->bottom_image) && \Storage::exists($image->bottom_image)){
+        if (isset($image->bottom_image) && \Storage::exists($image->bottom_image)) {
             return $image->bottom_image;
         }
         return NULL;

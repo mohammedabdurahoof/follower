@@ -23,7 +23,7 @@ class ClientController extends Controller
     
     public function getDataById(GeneralService $gs, $id=""){
         $this->data['organizations'] = $gs->getOrganizations();
-        $this->data['services'] = $gs->getServices();
+        $this->data['services'] = $gs->getServicesForClient();
         if(isset($id) && $id > 0){
             $this->data['details'] = $this->service->getDetailsById($id);
         }
