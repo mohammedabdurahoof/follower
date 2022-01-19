@@ -14,9 +14,12 @@ namespace App\Traits;
  */
 trait GetTableNameTrait {
     protected function getTableName(int $serviceId, int $orgId): string {
-        $org = \App\Models\Organization::findOrFail($orgId);
-        $service = \App\Models\Service::findOrFail($serviceId);
-        $tablenameToLower = \Str::lower($org->name . ' ' . $service->name);
-        return \Str::slug($tablenameToLower, '_');
+        $org = \App\Models\Organization::find($orgId);
+        $service = \App\Models\Service::find($serviceId);
+        if(isset($org->id, $service->id)){
+            $tablenameToLower = \Str::lower($org->name . ' ' . $service->name);
+            return \Str::slug($tablenameToLower, '_');
+        }
+        return 'null';
     }
 }

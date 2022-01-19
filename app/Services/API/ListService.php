@@ -34,12 +34,11 @@ class ListService extends APIBaseService {
         $return = [];
         $table_name = $this->getTableName($inputs['service_id'], $inputs['organization_id']);
         $hasTable = \Schema::Connection(env('DB_CONNECTION'))->hasTable($table_name);
-        if (isset($inputs['client_id'], $inputs['customer_id']) && $hasTable) {
+        if (isset($inputs['customer_id']) && $hasTable) {
             $return['data'] = \DB::table($table_name)
                     ->join("clients", "$table_name.client_id", "=", "clients.id")
                     ->join("customers", "$table_name.customer_id", "=", "customers.id")
-                    ->select('clients.id as clients_client_id', 'clients.name as client_name', 'customers.name as customer_name', "$table_name.*")
-                    ->where("$table_name.client_id", $inputs['client_id'])
+                    ->select('clients.id as clients_id', 'clients.name as client_name', 'customers.name as customer_name', "$table_name.*")
                     ->where("$table_name.customer_id", $inputs['customer_id'])
                     ->get();
         }
@@ -59,15 +58,15 @@ class ListService extends APIBaseService {
             $i = 0;
             if(count($v->admin_master_image) > 0 && $v->file_type == "images"){
                 foreach($v->admin_master_image as $image){
-                    $x = $i++;
-                    $return['images'][$x]['name'] = $v->file_name;
-                    $return['images'][$x]['link'] = asset($image->image_link);
+                    $index = $i++;
+                    $return['images'][$index]['name'] = $v->file_name;
+                    $return['images'][$index]['link'] = asset($image->image_link);
                 }
             }
             if(isset($v->file_link) && $v->file_type == "pdf"){
-                $x = $i++;
-                $return['docs'][$x]['name'] = $v->file_name;
-                $return['docs'][$x]['url'] = asset($v->file_link);
+                $index = $i++;
+                $return['docs'][$index]['name'] = $v->file_name;
+                $return['docs'][$index]['url'] = asset($v->file_link);
             }
         }
         return $return;

@@ -27,7 +27,7 @@ class DataListRequest extends FormRequest
             'organization_id' => 'required|numeric|min:0',
             'service_id' => 'required|numeric|min:0',
             'customer_id' => 'required|numeric|min:0',
-            'client_id' => 'required|numeric|min:0'
+            'client_id' => 'numeric|min:0'
         ];
     }
     
@@ -42,7 +42,6 @@ class DataListRequest extends FormRequest
             'customer_id.required' => 'Customer Is Required',
             'customer_id.integer' => 'Please Select Valid Customer',
             'customer_id.min' => 'No Customer Found',
-            'client_id.required' => 'Client Is Required',
             'client_id.integer' => 'Please Select Valid Client',
             'client_id.min' => 'No Client Found',
         ];
