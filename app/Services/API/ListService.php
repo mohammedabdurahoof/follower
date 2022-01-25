@@ -24,7 +24,6 @@ class ListService extends APIBaseService {
 
     public function getDataImageDocumentList(array $inputs): array {
         $return['services'] = parent::getServiceByOrganization($inputs['organization_id']);
-        
         $return['list'] = $this->getDataList($inputs);
 
         return $return;
@@ -62,8 +61,8 @@ class ListService extends APIBaseService {
                 ->where('organization_id', $organization_id)
                 ->where('service_id', $service_id)
                 ->where('file_type', '<>', 'txt')->get();
+        $i = 0;
         foreach($admin_master as $v){
-            $i = 0;
             if(count($v->admin_master_image) > 0 && $v->file_type == "images"){
                 $return['data_type'] = "images";
                 foreach($v->admin_master_image as $image){
@@ -75,7 +74,6 @@ class ListService extends APIBaseService {
             }
             if(isset($v->file_link) && $v->file_type == "pdf"){
                 $index = $i++;
-                
                 $return['data_type'] = "docs";
                 $return['data'][$index]['id'] = $v->id;
                 $return['data'][$index]['name'] = $v->file_name;
