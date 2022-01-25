@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('home');
-Route::get('client/full-images/view/{clientid}/{iamgeid}', [App\Http\Controllers\Client\ImagesController::class, 'mergedImage'])->name('client.fullimage.view');
 
 Route::prefix('admin')->group(function(){
     Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('admin.login');

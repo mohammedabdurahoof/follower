@@ -19,5 +19,11 @@ Route::group(['prefix' => 'customer'],function(){
         Route::post('organization/client/list',[App\Http\Controllers\API\OrgClientListController::class, 'getCustomerOrganization'])->name('api.customer.org.client');
         Route::post('organization/clients/services',[App\Http\Controllers\API\OrgClientListController::class, 'getClientsServices'])->name('api.customer.clients.services');
         Route::post('datum/list',[App\Http\Controllers\API\DataListController::class, 'getListWithService'])->name('api.customer.datum.list');
+        
+        Route::group(['prefix' => 'data-details'],function(){
+            Route::post('details',[App\Http\Controllers\API\DetailContoller::class, 'getDataDetails'])->name('api.customer.data.detail');
+            Route::post('image-detail',[App\Http\Controllers\API\DetailContoller::class, 'getImageDetails'])->name('api.customer.image.detail');
+            Route::post('document-detail',[App\Http\Controllers\API\DetailContoller::class, 'getDocumentDetails'])->name('api.customer.document.detail');
+        });
     });
 });

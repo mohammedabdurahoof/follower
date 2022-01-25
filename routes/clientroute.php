@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //
-
+Route::get('client/full-images/view/{clientid}/{imageid}', [App\Http\Controllers\Client\ImagesController::class, 'mergedImage'])->name('client.fullimage.view');
 //
 Route::prefix('client')->group(function() {
     Route::middleware('guest:client')->group(function() {
