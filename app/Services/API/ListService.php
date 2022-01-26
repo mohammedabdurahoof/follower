@@ -12,6 +12,7 @@ use App\Services\API\APIBaseService;
 use App\Traits\GetTableNameTrait;
 use App\Models\AdminMaster;
 use App\Models\UploadDataSetting;
+use Illuminate\Support\Collection;
 
 /**
  * Description of ListService
@@ -35,12 +36,14 @@ class ListService extends APIBaseService {
         $hasTable = \Schema::Connection(env('DB_CONNECTION'))->hasTable($table_name);
         if (isset($inputs['customer_id']) && $hasTable) {
             $return['unique'] = $this->getUniqueColumnforData($inputs['service_id']);
-            $return['data'] = \DB::table($table_name)
+            $result = \DB::table($table_name)
                     ->join("clients", "$table_name.client_id", "=", "clients.id")
                     ->join("customers", "$table_name.customer_id", "=", "customers.id")
                     ->select('clients.id as clients_id', 'clients.name as client_name', 'customers.name as customer_name', "$table_name.*")
                     ->where("$table_name.customer_id", $inputs['customer_id'])
                     ->get();
+
+            $return['data'] = $this->addServiceOrganizationToDataList($result, $inputs['service_id'], $inputs['organization_id']);
         }
         if (!$hasTable) {
             $return = $this->getImagesDocuments($inputs['service_id'], $inputs['organization_id'], $return);
@@ -56,14 +59,23 @@ class ListService extends APIBaseService {
         return "";
     }
 
+    private function addServiceOrganizationToDataList(Collection $data, int $service_id, int $org_id): Collection {
+        foreach ($data as $k => $v) {
+            $v->service_id = $service_id;
+            $v->organization_id = $org_id;
+            $data[$k] = $v;
+        }
+        return $data;
+    }
+
     private function getImagesDocuments(int $service_id, int $organization_id, array $return): array {
         $admin_master = AdminMaster::with('admin_master_image')
                         ->where('organization_id', $organization_id)
                         ->where('service_id', $service_id)
                         ->where('file_type', '<>', 'txt')->get();
-        
+
         $returnData = $this->imagesDocsFilter($return, $admin_master);
-        
+
         return $returnData;
     }
 
@@ -74,6 +86,8 @@ class ListService extends APIBaseService {
                 $return['data_type'] = "images";
                 foreach ($v->admin_master_image as $image) {
                     $return['data'][$i]['id'] = $image->id;
+                    $return['data'][$i]['service_id'] = $v->service_id;
+                    $return['data'][$i]['organization_id'] = $v->organization_id;
                     $return['data'][$i]['name'] = $v->file_name;
                     $return['data'][$i]['url'] = asset($image->image_link);
                     $i++;
@@ -82,6 +96,8 @@ class ListService extends APIBaseService {
             if (isset($v->file_link) && $v->file_type == "pdf") {
                 $return['data_type'] = "docs";
                 $return['data'][$i]['id'] = $v->id;
+                $return['data'][$i]['service_id'] = $v->service_id;
+                $return['data'][$i]['organization_id'] = $v->organization_id;
                 $return['data'][$i]['name'] = $v->file_name;
                 $return['data'][$i]['url'] = asset($v->file_link);
                 $i++;
