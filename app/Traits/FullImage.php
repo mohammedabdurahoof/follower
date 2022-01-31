@@ -16,9 +16,9 @@ namespace App\Traits;
 trait FullImage {
 
     public function mergeImage($top_image, $bottom_image, $save_file = false) {
-//        dd(storage_path('app\\'.$top_image));
-        $topPath = storage_path('app\\'.$top_image);
-        $bottomPath = storage_path('app\\'.$bottom_image);
+        $topPath = str_replace('\\', '/', storage_path('app\\'.$top_image));
+        $bottomPath = str_replace('\\', '/', storage_path('app\\'.$bottom_image));
+        
         list($img1_width, $img1_height) = getimagesize($topPath);
         list($img2_width, $img2_height) = getimagesize($bottomPath);
 
